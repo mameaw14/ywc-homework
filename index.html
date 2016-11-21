@@ -41,13 +41,40 @@
   #p-img {
     font-family: roboto;
   }
+
   </style>
 </head>
 
 <body>
   <div class="text-wrap" >
     <svg viewBox="0 0 500 150">
-
+      <animate 
+        xlink:href="#y-patt"
+        attributeName="y"
+        from="10"
+        to="0" 
+        dur="1s"
+        begin="0s"
+        repeatCount="indefinite"
+      />
+      <animate 
+        xlink:href="#w-patt"
+        attributeName="y"
+        from="10"
+        to="0" 
+        dur="1s"
+        begin="0s"
+        repeatCount="indefinite"
+      />
+      <animate 
+        xlink:href="#c-patt"
+        attributeName="y"
+        from="10"
+        to="0" 
+        dur="1s"
+        begin="0s"
+        repeatCount="indefinite"
+      />
       <pattern id="y-patt" x="50%" y="0" width="6" height="10" patternUnits="userSpaceOnUse">
         <text class="patt" x="0" y="10" style="fill: #F09;  font-size: 8px;">Y</text>
       </pattern>
