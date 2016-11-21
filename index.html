@@ -70,12 +70,15 @@
 
   <script type="text/javascript">
     document.addEventListener("mousemove", changebgcolor);
-    document.addEventListener("touchmove", changebgcolor);
+    document.addEventListener("touchmove", changebgcolortouch);
     function changebgcolor(event) {
-    var x = event.clientX;
-    var y = event.clientY;
-    var str = 'hsl(' + x/screen.width*360+ ', ' + y/screen.height*100 + '%, 40%)';
-    document.body.style.background = str;
+      var x = event.clientX;
+      var y = event.clientY;
+      var str = 'hsl(' + x/screen.width*360+ ', ' + y/screen.height*100 + '%, 40%)';
+      document.body.style.background = str;
+    }
+    function changebgcolortouch(event) {
+      changebgcolor(event.touches[0]);
     }
   </script>
 </body>
