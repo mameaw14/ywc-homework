@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <style type="text/css">
+  body {
+    background: #1d1f20;
+  }
+  
+  body * {
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body .text-wrap {
+    margin: 0;
+    position: relative;
+    width: 100%;
+  }
+  
+  body .text-wrap svg {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    font: bold 10em sans-serif;
+    text-transform: uppercase;
+  }
+  
+  body .text-wrap svg .img-layer {
+    fill: url(#p-img);
+  }
+  
+  body .text-wrap svg .gradient-layer {
+    fill: url(#gr-overlay);
+  }
+  
+  #p-img {
+    font-family: roboto;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="text-wrap">
+    <svg viewBox="0 0 500 150">
+
+      <pattern id="y-patt" x="50%" y="0" width="6" height="10" patternUnits="userSpaceOnUse">
+        <text x="0" y="10" style="fill: #F09;  font-size: 8px;">Y</text>
+      </pattern>
+
+      <pattern id="w-patt" x="50%" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+        <text x="0" y="10" style="fill: #F09;  font-size: 8px;">W</text>
+      </pattern>
+
+      <pattern id="c-patt" x="50%" y="0" width="6" height="10" patternUnits="userSpaceOnUse">
+        <text x="0" y="10" style="fill: #F09;  font-size: 8px;">C</text>
+      </pattern>
+
+      <text text-anchor="middle" x="50%" y="50%" dy=".35em" >
+        <tspan fill="url(#y-patt)">Y</tspan>
+        <tspan dx="-50" fill="url(#w-patt)">W</tspan>
+        <tspan dx="-50" fill="url(#c-patt)">C</tspan>
+      </text>
+    </svg>
+  </div>
+</body>
+
+</html>
