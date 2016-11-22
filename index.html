@@ -2,10 +2,11 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
   <meta charset="utf-8">
   <title>Mameaw14-YWC-HW</title>
   <script type="text/javascript" src="snap.svg-min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <style type="text/css">
   @font-face {
     font-family: 'Open Sans';
@@ -40,6 +41,28 @@
   
   pattern > text {
     font-family: monospace;
+  }
+
+  .input {
+    text-align: center;
+  }
+
+  input {
+    height: 3em;
+    width: 6em;
+    background-color: #303436;
+    text-align: center;
+    color: #a0a8ab;
+    font-size: 2em;
+    border: 1px solid #a0a8ab;
+    border-radius: 8px;
+  }
+
+  .star {
+    position: absolute;
+    color: #a0a8ab;
+    font-family: monospace;
+    font-size: 24px;
   }
   </style>
   <script type="text/javascript">
@@ -103,14 +126,44 @@
       changebgcolor(event.touches[0]);
     }
 
+    //game
+    var score = 0;
+    var now = [];
+    function rndx(){
+      return Math.random()*screen.availWidth; 
+    }
+
+    function generator() {
+      var char = String.fromCharCode(Math.floor(Math.random() * 26) + 'A'.charCodeAt(0) );
+      now.push(char);
+      var m = $('<div>');
+      m.addClass('star');
+      m.css('left',rndx());
+      m.css('top',0);
+      m.html(char);
+      $('#random').append(m);
+      m.animate({
+        opacity: 0.2,
+        top: 500
+      }, 2000, function(){
+        m.remove();
+        now.shift();
+      });
+    }
+
+    function capture(key) {
+      if (now.indexOf(key) != -1) {
+        console.log(key);
+      }
+    }
 
     function changeTexture() {
-      var key = document.getElementById('key-text').value;
+      var key = document.getElementById('key-text').value.toUpperCase();
+      capture(key.substring(key.length-1));
       if(key.length > 3) {
         key = key.substring(1);
         document.getElementById('key-text').value = key;
       }
-      console.log(key);
       for (var i = 0; i < 3; i++) {
         patt[i].select('text').attr({text:key[i]});
       }
@@ -121,15 +174,21 @@
     document.addEventListener("mousemove", changebgcolor);
     document.addEventListener("touchmove", changebgcolortouch);
     document.getElementById('key-text').addEventListener("keyup", changeTexture);
+
+    setInterval(generator,1000);
+
+    
+
   }
   </script>
 </head>
 
 <body>
+  <div id="random"></div>
   <div class="text-wrap">
     <svg id="snap"></svg>
   </div>
-  <div>
+  <div class="input">
     <input type="text" id="key-text">
   </div>
 </body>
