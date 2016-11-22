@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
   <title>Mameaw14-YWC-HW</title>
+  <script type="text/javascript" src="snap.svg-min.js"></script>
   <style type="text/css">
   body {
     background: #1d1f20;
@@ -38,81 +39,70 @@
     fill: url(#gr-overlay);
   }
   
-  #p-img {
-    font-family: roboto;
+  pattern > text {
+    font-family: monospace;
   }
 
   </style>
+  <script type="text/javascript">
+    window.onload = function () {
+      var s = Snap('#snap').attr({viewBox:'0 0 500 150'});
+      var text = s.text('50%', '50%', ['Y', 'W', 'C']).attr({
+        textAnchor: 'middle',
+        dy: '.35em'
+      });
+
+      var textChilds = text.selectAll('tspan');
+
+      var yPatt = s.text('0','0','Y').attr({
+        x: '0',
+        y: '8',
+        fill: '#F09',
+        fontSize: '8px'
+      }).toPattern('0','0',6,8);
+
+      var wPatt = yPatt.clone();
+      var cPatt = yPatt.clone();
+      wPatt.selectAll('text').attr({text:'W'});
+      cPatt.selectAll('text').attr({text:'C'});
+
+      textChilds[0].attr({fill: yPatt});
+      textChilds[1].attr({fill: wPatt});
+      textChilds[2].attr({fill: cPatt});
+
+      function slideUp(elem) {
+        elem.animate({y: '0'}, 1000, null, function(){
+          elem.attr({y:'8'});
+          slideUp(elem);
+        });
+      }
+      function changebgcolor(event) {
+        var x = event.clientX;
+        var y = event.clientY;
+        var str = 'hsl(' + (x / screen.width )+ ', ' + '100%, '+ (y / screen.height * 50 + 45)+ '%)';
+        yPatt.selectAll('text').attr({fill: str});
+        wPatt.selectAll('text').attr({fill: str});
+        cPatt.selectAll('text').attr({fill: str});
+      }
+      function changebgcolortouch(event) {
+        changebgcolor(event.touches[0]);
+      }
+
+      slideUp(yPatt);
+      slideUp(wPatt);
+      slideUp(cPatt);
+
+      document.addEventListener("mousemove", changebgcolor);
+      document.addEventListener("touchmove", changebgcolortouch);
+    }
+  </script>
 </head>
 
 <body>
-  <div class="text-wrap" >
-    <svg viewBox="0 0 500 150">
-      <animate 
-        xlink:href="#y-patt"
-        attributeName="y"
-        from="10"
-        to="0" 
-        dur="1s"
-        begin="0s"
-        repeatCount="indefinite"
-      />
-      <animate 
-        xlink:href="#w-patt"
-        attributeName="y"
-        from="10"
-        to="0" 
-        dur="1s"
-        begin="0s"
-        repeatCount="indefinite"
-      />
-      <animate 
-        xlink:href="#c-patt"
-        attributeName="y"
-        from="10"
-        to="0" 
-        dur="1s"
-        begin="0s"
-        repeatCount="indefinite"
-      />
-      <pattern id="y-patt" x="50%" y="0" width="6" height="10" patternUnits="userSpaceOnUse">
-        <text class="patt" x="0" y="10" style="fill: #F09;  font-size: 8px;">Y</text>
-      </pattern>
+   <div class="text-wrap" >
+     <svg id="snap"></svg>
+   </div>
 
-      <pattern id="w-patt" x="50%" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-        <text class="patt" x="0" y="10" style="fill: #F09;  font-size: 8px;">W</text>
-      </pattern>
-
-      <pattern id="c-patt" x="50%" y="0" width="6" height="10" patternUnits="userSpaceOnUse">
-        <text class="patt" x="0" y="10" style="fill: #F09;  font-size: 8px;">C</text>
-      </pattern>
-
-      <text text-anchor="middle" x="50%" y="50%" dy=".35em" >
-        <tspan fill="url(#y-patt)">Y</tspan>
-        <tspan dx="-45" fill="url(#w-patt)">W</tspan>
-        <tspan dx="-45" fill="url(#c-patt)">C</tspan>
-      </text>
-    </svg>
-  </div>
-
-  <script type="text/javascript">
-    document.addEventListener("mousemove", changebgcolor);
-    document.addEventListener("touchmove", changebgcolortouch);
-    function changebgcolor(event) {
-      var x = event.clientX;
-      var y = event.clientY;
-      var str = 'hsl(' + (x / screen.width * 360 )+ ', ' + '100%, '+ (y / screen.height * 50 + 45)
-          + '50%)';
-
-      var list = document.getElementsByClassName('patt');
-      for (var i = list.length - 1; i >= 0; i--) {
-        list[i].style.fill = str;
-      }
-    }
-    function changebgcolortouch(event) {
-      changebgcolor(event.touches[0]);
-    }
-  </script>
 </body>
 
 </html>
