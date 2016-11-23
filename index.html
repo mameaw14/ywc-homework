@@ -6,7 +6,6 @@
   <meta charset="utf-8">
   <title>Mameaw14-YWC-HW</title>
   <script type="text/javascript" src="snap.svg-min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <style type="text/css">
   @font-face {
     font-family: 'Open Sans';
@@ -42,11 +41,11 @@
   pattern > text {
     font-family: monospace;
   }
-
+  
   .input {
     text-align: center;
   }
-
+  
   input {
     height: 3em;
     width: 6em;
@@ -57,12 +56,44 @@
     border: 1px solid #a0a8ab;
     border-radius: 8px;
   }
-
+  
   .star {
+    z-index: 100;
     position: absolute;
     color: #a0a8ab;
     font-family: monospace;
-    font-size: 24px;
+    font-size: 2em;
+  }
+  
+  @-webkit-keyframes fadeOutDown {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.2;
+      -webkit-transform: translateY(500px);
+      transform: translateY(500px);
+    }
+  }
+  
+  @keyframes fadeOutDown {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.2;
+      -webkit-transform: translateY(500px);
+      transform: translateY(500px);
+    }
+  }
+  
+  .fadeOutDown {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeOutDown;
+    animation-name: fadeOutDown;
   }
   </style>
   <script type="text/javascript">
@@ -70,11 +101,18 @@
     var s = Snap('#snap').attr({
       viewBox: '0 0 500 150'
     });
-    var text = s.text('50%', '50%', ['Y', 'W', 'C']).attr({
+    var text_bg = s.text('50%', '50%', ['Y', 'W', 'C']).attr({
       textAnchor: 'middle',
       dy: '.35em'
     });
+    var text = text_bg.clone();
+    var f = s.filter(Snap.filter.shadow(0, 0, 10, '#f9f0d2', 0));
+    f.attr({id:'shadow'});
 
+    text_bg.attr({
+      fill: '#1d1f20',
+      filter: f
+    });
     var textChilds = text.selectAll('tspan');
 
     var yPatt = s.text('0', '0', 'J').attr({
@@ -129,44 +167,60 @@
     //game
     var score = 0;
     var now = [];
-    function rndx(){
-      return Math.random()*screen.availWidth; 
+
+    function rndx() {
+      return Math.random() * (screen.availWidth - 20) + 10;
     }
 
     function generator() {
-      var char = String.fromCharCode(Math.floor(Math.random() * 26) + 'A'.charCodeAt(0) );
+      var char = String.fromCharCode(Math.floor(Math.random() * 26) + 'A'.charCodeAt(0));
       now.push(char);
-      var m = $('<div>');
-      m.addClass('star');
-      m.css('left',rndx());
-      m.css('top',0);
-      m.html(char);
-      $('#random').append(m);
-      m.animate({
-        opacity: 0.2,
-        top: 500
-      }, 2000, function(){
+      var m = document.createElement('div');
+      m.className += 'star';
+      m.style.left = rndx() + 'px';
+      m.style.top = '0px';
+      m.appendChild(document.createTextNode(char));
+      document.getElementById('random').appendChild(m);
+      m.classList.add('fadeOutDown');
+      setTimeout(function(){
         m.remove();
         now.shift();
-      });
+      }, 2000);
     }
 
     function capture(key) {
-      if (now.indexOf(key) != -1) {
-        console.log(key);
+      var id = now.indexOf(key);
+      if (id != -1) {
+        score += 0.2;
+        document.getElementById('random').children[id].style.visibility = "hidden";
+        if (Math.random() < 0.4) {
+          setTimeout(generator, 1500);
+        }
       }
     }
 
     function changeTexture() {
       var key = document.getElementById('key-text').value.toUpperCase();
-      capture(key.substring(key.length-1));
-      if(key.length > 3) {
-        key = key.substring(1);
+      capture(key.substring(key.length - 1));
+      if (key.length > 3) {
+        key = key.substring(key.length - 3);
         document.getElementById('key-text').value = key;
       }
       for (var i = 0; i < 3; i++) {
-        patt[i].select('text').attr({text:key[i]});
+        patt[i].select('text').attr({
+          text: key[i]
+        });
       }
+    }
+
+    function runner() {
+      if(score > 0.014) {
+        score -= 0.014;
+      }
+
+      var start = document.getElementById('shadow').childNodes[4].childNodes[0].slope.baseVal;
+      var step = (score - start) / 10;
+      document.getElementById('shadow').childNodes[4].childNodes[0].slope.baseVal += step*5;
     }
 
     patt.forEach(slideUp, this);
@@ -175,10 +229,8 @@
     document.addEventListener("touchmove", changebgcolortouch);
     document.getElementById('key-text').addEventListener("keyup", changeTexture);
 
-    setInterval(generator,1000);
-
-    
-
+    setInterval(generator, 1000);
+    setInterval(runner, 10);
   }
   </script>
 </head>
